@@ -1,0 +1,24 @@
+# A fixed environment to reproduce the npm install autopsy, so you get the same
+# shape of numbers the post did (network aside, which wanders, and the kernel,
+# which is the host's).
+#
+#   podman build -t npm-autopsy -f Containerfile .
+#   podman run --rm --cap-add=SYS_PTRACE --security-opt seccomp=unconfined npm-autopsy
+#
+# Use `docker` in place of `podman` if you prefer. Both run flags are required:
+# strace needs ptrace, which a container blocks by default.
+#
+# A container shares the host's kernel, so the kernel version is your machine's.
+# For a kernel of its own, run it in a VM. To pin the image for good, replace the
+# tag below with a digest (FROM node:22-bookworm-slim@sha256:...).
+FROM docker.io/library/node:22-bookworm-slim
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends strace ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /lab
+COPY package.json run-autopsy.sh ./
+RUN chmod +x run-autopsy.sh
+
+ENTRYPOINT ["./run-autopsy.sh"]

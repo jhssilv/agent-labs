@@ -1,0 +1,13 @@
+[Unit]
+Description=llama-swap: on-demand vLLM
+After=docker.service network-online.target llm-firewall.service
+Requires=docker.service llm-firewall.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f gpt-oss-120b nemotron-3.5-super qwen3.6-35b-a3b qwen3.5-4b qwen3.5-2b
+ExecStart=/usr/local/bin/llama-swap -config /etc/llama-swap/config.yaml -listen 0.0.0.0:8000
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

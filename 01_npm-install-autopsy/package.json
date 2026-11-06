@@ -1,0 +1,9 @@
+{
+  "name": "npm-install-autopsy",
+  "private": true,
+  "description": "Test project for the npm install syscall autopsy. express gives a realistic tree of pure-JavaScript dependencies; core-js has a postinstall script, so npm spawns a shell and an extra node process (the lifecycle-scripts point).",
+  "dependencies": {
+    "express": "^4.21.2",
+    "core-js": "^3.39.0"
+  }
+}
